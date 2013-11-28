@@ -12,7 +12,7 @@ public class EMR extends Thread  {
 	@Override
 	public void run(){
 		
-		System.out.println("EMR is starting");
+		System.out.println("EMR is started");
 		
 		do{
 			

@@ -22,7 +22,7 @@ public class App extends Thread{
 	@Override
 	public void run(){
 		
-		System.out.println("Application is starting");
+		System.out.println("Application is started");
 		
 		do{
 			
