@@ -1,6 +1,5 @@
-package algorep.reseau;
+package poubelle;
 
-import algorep.MyMessage;
 
 public class ReseauSite extends Thread{
 

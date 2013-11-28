@@ -1,4 +1,4 @@
-package algorep.reseau;
+package poubelle;
 
 
 public class Medium extends Thread{
