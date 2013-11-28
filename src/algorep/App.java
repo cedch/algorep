@@ -4,16 +4,29 @@
 package algorep;
 
 /**
- * @author Cédric
+ * @author Jeremy
  *
  */
-public class App {
+public class App extends Thread{
 
 	/**
 	 * 
 	 */
 	public App() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * Override the run function to implement the app with a infinity loop
+	 */
+	@Override
+	public void run(){
+		
+		System.out.println("Application is starting");
+		
+		do{
+			
+		}while(true);
 	}
 
 }
