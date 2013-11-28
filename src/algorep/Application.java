@@ -1,10 +1,10 @@
 package algorep;
 
-public class App implements Runnable {
+public class Application implements Runnable {
 
-	private Mx mutex;
+	private EMR mutex;
 
-	public App(Mx tsec) {
+	public Application(EMR tsec) {
 
 		mutex = tsec;
 	}
@@ -22,7 +22,7 @@ public class App implements Runnable {
 
 			// The application send a R request to the Mutex
 
-			mutex.rSend(Main.siteNb, Mx.getTimer());
+			mutex.rSend(Launcher.siteNb, EMR.getTimer());
 
 			// IF the mutex allow the application to execute the code inside the
 			// critical section.
@@ -31,7 +31,7 @@ public class App implements Runnable {
 
 			// The application free the critical section
 
-			mutex.lSend(Main.siteNb, Mx.getTimer());
+			mutex.lSend(Launcher.siteNb, EMR.getTimer());
 			System.out.println("[A] Free the critical section ");
 
 			try {

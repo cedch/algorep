@@ -5,12 +5,11 @@
 package algorep;
 
 /**
- * This class runs all thread
+ * This class is intented to runs all threads
  * 
- * @author seb
  * 
  */
-public class Main {
+public class Launcher {
 
 	public static int siteNb = 0;
 
@@ -19,11 +18,11 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		Mx mutex = new Mx();
+		EMR mutex = new EMR();
 
 		// Application's thread
 
-		Thread tapp = new Thread(new App(mutex));
+		Thread tapp = new Thread(new Application(mutex));
 		tapp.start();
 
 		// Mx's Thread

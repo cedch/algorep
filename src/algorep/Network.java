@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * @author seb
- * 
+ * This is intended to simulate the network layer
  */
 public class Network implements Runnable {
 
-	private Mx mutex;
+	private EMR mutex;
 
-	public Network(Mx tmut) {
+	public Network(EMR tmut) {
 
 		mutex = tmut;
 	}
@@ -63,16 +62,21 @@ public class Network implements Runnable {
 					// The network calls the method of mX depends on what the
 					// user simulated.
 
-					if (MessageLue == 'r')
+					switch(MessageLue){
+					case Constantes.RECEIVE:
 						mutex.rReceive(SiteLue, HorlogeLue);
-					if (MessageLue == 'l')
+						break;
+					case Constantes.FREE:
 						mutex.lReceive(SiteLue, HorlogeLue);
-					if (MessageLue == 'a')
+						break;
+					case Constantes.ACKNOWLEDGEMENT:
 						mutex.aReceive(SiteLue, HorlogeLue);
+						break;
+					}
 				}
 			} catch (IOException e) {
 
-				System.err.println("Your format is not correct");
+				System.err.println("Incorrect format");
 			}
 
 		}

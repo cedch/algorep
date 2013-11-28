@@ -1,17 +1,22 @@
 package algorep;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Mx implements Runnable {
+public class EMR implements Runnable {
 
-	private ArrayList<Line> view = new ArrayList<Line>();
+	private List<MyMessage> view;
 	private static int timer = 0;
-
-	public synchronized ArrayList<Line> getView() {
-		return view;
+	
+	public EMR(){
+		view = new ArrayList<MyMessage>();
 	}
 
-	public synchronized void setView(ArrayList<Line> vue) {
+	public synchronized ArrayList<MyMessage> getView() {
+		return (ArrayList<MyMessage>) view;
+	}
+
+	public synchronized void setView(ArrayList<MyMessage> vue) {
 		this.view = vue;
 	}
 
@@ -20,18 +25,18 @@ public class Mx implements Runnable {
 	}
 
 	public synchronized void setTimer(int timer) {
-		Mx.timer = timer;
+		EMR.timer = timer;
 	}
 
 	public void run() {
 
-		System.out.println("-- Starting the Mutex's thread --- \n  ");
+		System.out.println("Mutex is running\n  ");
 
 		// Initialize the "view" table.
 
-		view.add(new Line(' ', -1));
-		view.add(new Line(' ', -1));
-		view.add(new Line(' ', -1));
+		view.add(new MyMessage(' ', -1));
+		view.add(new MyMessage(' ', -1));
+		view.add(new MyMessage(' ', -1));
 
 		while (true) {
 
@@ -47,9 +52,9 @@ public class Mx implements Runnable {
 	 */
 	public void rSend(int siteNb, int timer) {
 
-		view.set(0, new Line('r', timer));
+		view.set(0, new MyMessage(Constantes.RECEIVE, timer));
 		this.broadcast('r', timer);
-		this.setTimer(Mx.getTimer() + 1);
+		this.setTimer(EMR.getTimer() + 1);
 
 		while (!checkScAvailable()) {
 
@@ -65,13 +70,13 @@ public class Mx implements Runnable {
 	 * @param timer
 	 */
 	public void aReceive(int siteNb, int timer) {
-		if (timer > Mx.timer)
-			Mx.timer = timer;
+		if (timer > EMR.timer)
+			EMR.timer = timer;
 
-		Mx.timer++;
-		if (this.view.get(siteNb).message != 'r') {
-			this.view.get(siteNb).message = 'a';
-			this.view.get(siteNb).timer = timer;
+		EMR.timer++;
+		if (this.view.get(siteNb).getMessage() != Constantes.RECEIVE) {
+			this.view.get(siteNb).setMessage(Constantes.ACKNOWLEDGEMENT);
+			this.view.get(siteNb).setClock(timer);
 		}
 
 	}
@@ -84,17 +89,16 @@ public class Mx implements Runnable {
 
 	private boolean checkScAvailable() {
 
-		int compteur = 0;
-		int timeValue = this.view.get(Main.siteNb).timer;
-		for (Line obj : this.view) {
+		int count = 0;
+		int timeValue = this.view.get(Launcher.siteNb).getClock();
+		for (MyMessage obj : this.view) {
 
-			if ((timeValue > obj.timer) && (Main.siteNb != compteur)) {
+			if ((timeValue > obj.getClock()) && (Launcher.siteNb != count)) {
 				return false;
 			}
-			compteur++;
+			count++;
 		}
 		return true;
-
 	}
 
 	/**
@@ -116,9 +120,9 @@ public class Mx implements Runnable {
 	 */
 	public void lSend(int siteNb, int timer) {
 
-		broadcast('l', Mx.timer);
-		Mx.timer++;
-		this.view.set(siteNb, new Line('l', timer));
+		broadcast(Constantes.FREE, EMR.timer);
+		EMR.timer++;
+		this.view.set(siteNb, new MyMessage(Constantes.FREE, timer));
 
 	}
 
@@ -130,11 +134,11 @@ public class Mx implements Runnable {
 	 */
 	public void rReceive(int siteLue, int timer) {
 
-		if (timer > Mx.timer)
-			Mx.timer = timer;
-		Mx.timer++;
+		if (timer > EMR.timer)
+			EMR.timer = timer;
+		EMR.timer++;
 		this.aSend(siteLue);
-		this.view.set(siteLue, new Line('r', timer));
+		this.view.set(siteLue, new MyMessage(Constantes.RECEIVE, timer));
 
 	}
 
@@ -146,8 +150,8 @@ public class Mx implements Runnable {
 	 */
 	private void aSend(int siteLue) {
 
-		if (this.view.get(siteLue).message != 'r')
-			this.view.set(Main.siteNb, new Line('a', Mx.timer));
+		if (this.view.get(siteLue).getMessage() != Constantes.RECEIVE)
+			this.view.set(Launcher.siteNb, new MyMessage(Constantes.ACKNOWLEDGEMENT, EMR.timer));
 
 	}
 
@@ -159,11 +163,11 @@ public class Mx implements Runnable {
 	 */
 	public void lReceive(int siteLue, int timer) {
 
-		if (timer > Mx.timer)
-			Mx.timer = timer;
-		Mx.timer++;
+		if (timer > EMR.timer)
+			EMR.timer = timer;
+		EMR.timer++;
 
-		this.view.set(siteLue, new Line('l', timer));
+		this.view.set(siteLue, new MyMessage(Constantes.FREE, timer));
 
 	}
 
